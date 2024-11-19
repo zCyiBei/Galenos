@@ -16,7 +16,7 @@ class ReservaCitaForm(forms.ModelForm):
     tipo_documento = forms.ChoiceField(choices=[('DNI', 'DNI'), ('Pasaporte', 'Pasaporte')], required=True)
     numero_documento = forms.CharField(max_length=20, required=True)
     especialidad = forms.ModelChoiceField(queryset=Especialidad.objects.all(), required=True)
-    doctor = forms.ModelChoiceField(queryset=Medico.objects.all(), required=True)
+    doctor = forms.ModelChoiceField(queryset=Medico.objects.none(), required=True)  # Inicia vacío
 
     class Meta:
         model = Cita
@@ -34,14 +34,14 @@ class ReservaCitaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ReservaCitaForm, self).__init__(*args, **kwargs)
         
-        # Inicializamos el campo 'doctor' con doctores de la especialidad seleccionada
+        # Si hay datos enviados, actualizamos los doctores según la especialidad seleccionada
         if 'especialidad' in self.data:
             especialidad_id = self.data.get('especialidad')
             self.fields['doctor'].queryset = Medico.objects.filter(especialidad_id=especialidad_id)
         elif self.instance.pk:
             self.fields['doctor'].queryset = self.instance.especialidad.medico_set.all()
 
-    # Método para actualizar los médicos según la especialidad seleccionada
+    # Método para validar los datos del formulario
     def clean(self):
         cleaned_data = super().clean()
         especialidad = cleaned_data.get("especialidad")
@@ -53,6 +53,16 @@ class ReservaCitaForm(forms.ModelForm):
                 self.add_error('doctor', 'El doctor seleccionado no pertenece a la especialidad elegida.')
 
         return cleaned_data
+
+class EditarCitaForm(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = ['fecha', 'hora']  # Los campos que quieres que se puedan editar
+
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'hora': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
+        }
 
 class ReporteForm(forms.Form):
     medico = forms.ModelChoiceField(queryset=User.objects.all(), required=False, widget=forms.Select(attrs={'class': 'form-control'}))

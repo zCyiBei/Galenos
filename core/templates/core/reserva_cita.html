@@ -90,24 +90,36 @@
   document.getElementById('especialidad').addEventListener('change', function () {
     var especialidadId = this.value;
     var doctorSelect = document.getElementById('doctor');
+    var doctorIdField = document.getElementById('doctor_id'); // Campo oculto para el ID del doctor
 
-    // Limpiar la lista de doctores
+    // Limpiar la lista de doctores y el valor del campo oculto
     doctorSelect.innerHTML = '<option value="" selected disabled>Selecciona un doctor</option>';
+    doctorIdField.value = '';  // Limpiar el campo oculto del ID del doctor
 
     if (especialidadId) {
-      fetch(`/api/doctores/${especialidadId}/`)
-        .then(response => response.json())
-        .then(data => {
-          data.doctores.forEach(function(doctor) {
-            var option = document.createElement('option');
-            option.value = doctor.id;
-            option.textContent = doctor.nombre;
-            doctorSelect.appendChild(option);
-          });
-        })
-        .catch(error => console.error('Error al cargar doctores:', error));
+        fetch(`/api/doctores/${especialidadId}/`)  // Se asume que esta ruta devuelve la lista de doctores de la especialidad
+            .then(response => response.json())
+            .then(data => {
+                data.doctores.forEach(function (doctor) {
+                    var option = document.createElement('option');
+                    option.value = doctor.id;
+                    option.textContent = doctor.nombre;
+                    doctorSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error al cargar doctores:', error));
     }
-  });
+});
+
+// Al seleccionar un doctor, actualizar el campo oculto con el ID del doctor
+document.getElementById('doctor').addEventListener('change', function () {
+    var doctorId = this.value;
+    var doctorIdField = document.getElementById('doctor_id');
+    doctorIdField.value = doctorId;  // Asigna el ID del doctor al campo oculto
+});
+
 </script>
+
+
 
 {% endblock script%}

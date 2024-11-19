@@ -56,7 +56,6 @@
                   <th>Apellidos</th>
                   <th>Correo</th>
                   <th>RUT</th>
-                  <th>Subscrito</th>
                   <th>Imagen</th>
                   <th>Acciones</th>
                 </tr>
@@ -71,7 +70,6 @@
                   <td>{{usuario.last_name }}</td>
                   <td>{{usuario.email }}</td>
                   <td>{{usuario.perfil.rut}}</td>
-                  <td>{% if usuario.perfil.subscrito %} Sí {% else %} No {% endif %}</td>
                   <td>
                     {% if usuario.perfil.imagen %}
                       <img src="/media/{{ usuario.perfil.imagen }}" class="usuario-sm img-fluid" style="max-width: 100px;" alt="">

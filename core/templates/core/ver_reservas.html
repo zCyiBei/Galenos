@@ -17,7 +17,10 @@
           <th>Tipo Documento</th>
           <th>Número Documento</th>
           <th>Estado Reserva</th>
-          <th>Acción</th>
+          {% if user.is_staff %}
+            <th>Acción</th>
+            <th>Editar</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -30,7 +33,9 @@
             <td>{{ cita.tipo_documento }}</td>
             <td>{{ cita.numero_documento }}</td>
             <td>{{ cita.estado }}</td>
-            <td>
+
+            {% if user.is_staff %}
+              <td>
                 <form method="POST" action="{% url 'anular_cita' cita.id %}" style="display:inline;">
                     {% csrf_token %}
                     <button 
@@ -40,7 +45,24 @@
                         Anular
                     </button>
                 </form>
-            </td>
+              </td>
+
+              <!-- Formulario de edición de cita -->
+              <td>
+                <form method="POST" action="{% url 'editar_cita' cita.id %}">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label for="fecha{{ cita.id }}" class="form-label">Fecha</label>
+                        <input type="date" name="fecha" id="fecha{{ cita.id }}" class="form-control" value="{{ cita.fecha|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="hora{{ cita.id }}" class="form-label">Hora</label>
+                        <input type="time" name="hora" id="hora{{ cita.id }}" class="form-control" value="{{ cita.hora|time:'H:i' }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning btn-sm">Actualizar</button>
+                </form>
+              </td>
+            {% endif %}
           </tr>
         {% empty %}
           <tr>
@@ -91,4 +113,3 @@
     });
 </script>
 {% endblock script %}
- 

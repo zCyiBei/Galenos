@@ -23,5 +23,6 @@ urlpatterns = [
     path('poblar', poblar, name='poblar'),
     path('reservar/', views.reserva_cita, name='reservar_cita'),
     path('reservas/', views.ver_reservas, name='reservas'),
+    path('editar-cita/<int:cita_id>/', views.editar_cita, name='editar_cita'),
     path('anular-cita/<int:cita_id>/', views.anular_cita, name='anular_cita'),
 ]

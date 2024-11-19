@@ -14,7 +14,7 @@ from .forms import IngresarForm, UsuarioForm, PerfilForm
 from .forms import RegistroUsuarioForm, RegistroPerfilForm
 from .tools import eliminar_registro, verificar_eliminar_registro, show_form_errors
 from django.core.mail import send_mail
-from .forms import ReservaCitaForm, ReporteForm
+from .forms import ReservaCitaForm, ReporteForm, EditarCitaForm
 from .models import Cita, Medico, Especialidad
 from django.http import HttpResponse
 import csv
@@ -24,6 +24,11 @@ from io import StringIO
 def reserva_cita(request):
     especialidades = Especialidad.objects.all()  # Obtener todas las especialidades
     doctores = Medico.objects.all()  # Obtener todos los doctores
+
+    # Filtrar doctores si ya se ha seleccionado una especialidad
+    if 'especialidad' in request.POST:
+        especialidad_id = request.POST.get('especialidad')
+        doctores = Medico.objects.filter(especialidad_id=especialidad_id)  # Filtrar doctores según especialidad seleccionada
 
     if request.method == 'POST':
         form = ReservaCitaForm(request.POST)
@@ -35,8 +40,8 @@ def reserva_cita(request):
             # Crear una nueva cita con la información del formulario
             cita = Cita(
                 usuario=request.user,  # Usar el usuario autenticado
-                medico=doctor,
-                especialidad=especialidad.nombre,
+                medico=doctor,  # Usar el médico seleccionado
+                especialidad=especialidad,  # Guardar la especialidad como objeto
                 fecha=form.cleaned_data['fecha'],
                 hora=form.cleaned_data['hora'],
                 tipo_documento=form.cleaned_data['tipo_documento'],
@@ -44,11 +49,36 @@ def reserva_cita(request):
                 estado='pendiente'  # Asignamos estado pendiente
             )
             cita.save()  # Guardar la cita en la base de datos
+
+            # Enviar correo de confirmación al usuario
+            send_mail(
+                'Confirmación de tu cita médica',
+                f'Hola {cita.usuario.username},\n\nTu cita médica ha sido reservada para el día {cita.fecha} a las {cita.hora}.',
+                'zi.yuan@duocuc.cl',  # Remitente
+                [cita.usuario.email],  # Destinatario (usuario)
+                fail_silently=False,
+            )
+
+            # Enviar un correo al médico con los detalles de la cita
+            send_mail(
+                'Nueva cita médica reservada',
+                f'Se ha reservado una nueva cita médica para {cita.usuario.username} (DNI: {cita.numero_documento}) el día {cita.fecha} a las {cita.hora}.',
+                'zi.yuan@duocuc.cl',  # Remitente
+                [doctor.email],  # Destinatario (doctor)
+                fail_silently=False,
+            )
+
+            # Mostrar mensaje de éxito en la interfaz
+            messages.success(request, '¡Cita reservada con éxito! Se ha enviado un correo de confirmación.')
             
             return redirect('ver_reservas')  # Redirigir a la página de citas reservadas
         else:
-            # Si el formulario no es válido, podemos mostrar los errores o manejarlo de alguna manera
-            return render(request, 'core/reserva_cita.html', {'form': form, 'especialidades': especialidades, 'doctores': doctores})
+            # Si el formulario no es válido, pasamos los doctores filtrados
+            return render(request, 'core/reserva_cita.html', {
+                'form': form, 
+                'especialidades': especialidades, 
+                'doctores': doctores
+            })
     else:
         form = ReservaCitaForm()
 
@@ -60,15 +90,41 @@ def reserva_cita(request):
 
 @login_required
 def ver_reservas(request):
-    # Si el usuario es superusuario, puede ver todas las citas
-    if request.user.is_superuser:
-        citas = Cita.objects.all()  # Mostrar todas las citas si es superusuario
+    # Si el usuario es superusuario  o administrador puede ver todas las citas
+    if request.user.is_superuser or request.user.is_staff:
+        citas = Cita.objects.all()  # Mostrar todas las citas si es superusuario o admin
     else:
-        # Si no es superusuario, solo verá sus propias citas
+        # Si no es superusuario o admin solo verá sus propias citas
         citas = Cita.objects.filter(usuario=request.user)
 
-    return render(request, 'core/ver_reservas.html', {'citas': citas})
+    if request.method == 'POST':
+        # Si se recibe un POST para editar una cita
+        form = EditarCitaForm(request.POST)
+        if form.is_valid():
+            cita_id = form.cleaned_data['cita_id']  # Añadimos un campo hidden para el ID de la cita
+            cita = get_object_or_404(Cita, id=cita_id)
+            cita.fecha = form.cleaned_data['fecha']
+            cita.hora = form.cleaned_data['hora']
+            cita.save()
+            return redirect('ver_reservas')  # Redirige a la misma página después de guardar la cita editada
+    else:
+        form = EditarCitaForm()
 
+    return render(request, 'core/ver_reservas.html', {'citas': citas, 'form': form})
+
+@login_required
+def editar_cita(request, cita_id):
+    cita = get_object_or_404(Cita, id=cita_id)
+    
+    if request.method == 'POST':
+        form = EditarCitaForm(request.POST, instance=cita)
+        
+        if form.is_valid():
+            form.save()  # Guardar los cambios en la cita
+            return redirect('reservas')  # Redirigir a la página de citas reservadas
+
+    form = EditarCitaForm(instance=cita)
+    return render(request, 'core/editar_cita.html', {'form': form, 'cita': cita})
 
 # Eliminar una cita
 @login_required
