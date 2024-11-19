@@ -1,0 +1,105 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<main role="main">
+  <section class="text-center">
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{% static 'core/img/CM1.jpg' %}" class="d-block w-100" alt="">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'core/img/CM2.jpg' %}" class="d-block w-100" alt="">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'core/img/CM3.jpg' %}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'core/img/CM4.jpg' %}" class="d-block w-100" alt="...">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </section>
+</main>
+
+<!-- Espacio entre el carrusel y las secciones -->
+<div class="container my-5">
+  <div class="row mb-5 align-items-center">
+    <div class="col-md-6">
+      <h2 class="text-center">Nuestros Servicios</h2>
+      <p>
+        Ofrecemos una amplia gama de servicios médicos especializados diseñados para brindar 
+        atención integral y de calidad a nuestros pacientes.
+      </p>
+      <ul>
+        <li>Consultas generales y especializadas</li>
+        <li>Diagnósticos por imágenes</li>
+        <li>Laboratorio clínico y más</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <img src="{% static 'core/img/CM2.jpg' %}" class="img-fluid rounded mx-auto d-block" alt="Imagen 2">
+    </div>
+  </div>
+
+  <!-- Segunda sección -->
+  <div class="row mb-5 align-items-center">
+    <div class="col-md-6 order-md-2">
+      <h2 class="text-center">Instalaciones Modernas</h2>
+      <p>
+        Nuestro centro médico cuenta con instalaciones modernas y cómodas diseñadas para ofrecer 
+        una experiencia agradable y eficiente a todos nuestros pacientes.
+      </p>
+      <ul>
+        <li>Equipos de última generación</li>
+        <li>Ambientes cómodos y seguros</li>
+        <li>Áreas de espera y atención personalizada</li>
+      </ul>
+    </div>
+    <div class="col-md-6 order-md-1">
+      <img src="{% static 'core/img/CM3.jpg' %}" class="img-fluid rounded mx-auto d-block" alt="Imagen 3">
+    </div>
+  </div>
+
+  <!-- Tercera sección: cómo llegar -->
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <h2 class="text-center">¿Cómo llegar al Centro Médico?</h2>
+      <p>
+        El Centro Médico Los Galenos está ubicado en un lugar de fácil acceso 
+        para todos. Estamos en el corazón de la ciudad, cerca de las principales 
+        vías de transporte. Puedes llegar en auto, bus o metro.
+      </p>
+      <ul>
+        <li><strong>Dirección:</strong> Vecinal 4745, San Joaquín, Región Metropolitana</li>
+        <li><strong>Transporte público:</strong> Estación de metro más cercana: San Joaquín.</li>
+        <li><strong>Horario:</strong> Lunes a Viernes, 8:00 AM - 9:00 PM <br> 
+                                      Sábados y Domingos, 9:00 AM - 8:00 PM </li>
+      </ul>
+    </div>
+
+    <!-- Mapa -->
+    <div class="col-md-6">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1433.91033281508!2d-70.62654355888714!3d-33.50089484940339!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662daa72aefdba7%3A0x7a385281807bf2fd!2sCentro%20Medico%20Los%20Galenos!5e1!3m2!1ses!2scl!4v1731989107560!5m2!1ses!2scl"
+        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<!-- Cargar el CSS de la página -->
+<link rel="stylesheet" href="{% static 'core/css/nosotros.css' %}">
+{% endblock script %}

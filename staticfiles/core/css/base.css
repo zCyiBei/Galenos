@@ -1,0 +1,134 @@
+.logo-menu-superior {
+    height: 40px;
+}
+
+.link-bloque {
+    display: inline-block; 
+    text-decoration: none !important; 
+    color: inherit; 
+    text-decoration: lin;
+}
+  
+.link-bloque:hover {
+    cursor: pointer;
+    border: 1px solid lightblue;
+}
+
+.error-message {
+    color: red !important;
+    font-weight: bold !important;
+}
+
+.table-hover .letra-boleta-anulada td {
+    color: red !important;
+    font-weight: bold !important;
+}
+  
+.producto-sm {
+    width:  82px;
+    height: 70px;
+}
+
+.usuario-sm {
+    width:  82px;
+    height: 70px;
+}
+
+.inicio-producto-imagen {
+    max-width:  165px;
+    /* max-height: 139px; */
+}
+
+.inicio-producto-descripcion {
+    width: 200px; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+#cuadro-imagen {
+    max-width: 236px;
+    max-height: 199px;
+    padding: 3px;
+    border: 2px solid gray;
+}
+  
+.ancho-160px {
+    width: 160px;
+}
+
+.ancho-175px {
+    width: 175px;
+}
+
+.ancho-200px {
+    width: 200px;
+}
+
+.td_img_estado_boleta {
+    text-align: center;
+    padding-left: 10px;
+}
+
+.td_fec_estado_boleta {
+    text-align: center;
+    font-size: 12px;
+}
+
+#id_direccion {
+    height: 130px;
+}
+
+.centrar-imagen-cargando-en-pantalla {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+}
+
+.ocultar-elemento {
+    display: none;
+}
+
+.capa-cubre-todo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background-color: #2C9ECC; */
+    background-color: #222222;
+    z-index: 10;
+}
+
+.menu-inferior {
+    background-color: #f8f9fa;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+footer {
+    width: 100%;
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 1%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+}
+
+footer svg {
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: middle; 
+    margin: 0 0px;
+  }
+
+
+.content {
+    margin-bottom: 10px;
+}

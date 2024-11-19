@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-start vh-100" style="margin-top: 50px;">
+  <div class="card p-4 shadow-lg" style="background-color: rgba(128, 128, 128, 0.7); border-radius: 15px; width: 50%;">
+    <h1 class="text-center mb-4 text-white">Reserva tu cita médica</h1>
+
+    <form method="POST" action="{% url 'reservar_cita' %}">
+      {% csrf_token %}
+      <div class="row">
+        <!-- Selección de especialidad -->
+        <div class="col-md-6 mb-3">
+          <label for="especialidad" class="form-label text-white">Especialidad</label>
+          <select class="form-select" id="especialidad" name="especialidad" required>
+            <option value="" selected disabled>Selecciona una especialidad</option>
+            {% for especialidad in especialidades %}
+              <option value="{{ especialidad.id }}" data-doctor="{{ especialidad.medico_set.first.id }}" data-doctor-name="{{ especialidad.medico_set.first.nombre }}">
+                {{ especialidad.nombre }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Campo de doctor (solo lectura) -->
+        <div class="col-md-6 mb-3">
+          <label for="doctor" class="form-label text-white">Doctor</label>
+          <input type="text" class="form-control" id="doctor" name="doctor" readonly>
+        </div>
+      </div>
+
+      <!-- Selección de fecha y hora -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="fecha" class="form-label text-white">Fecha</label>
+          <input type="date" class="form-control" id="fecha" name="fecha" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="hora" class="form-label text-white">Hora</label>
+          <input type="time" class="form-control" id="hora" name="hora" required>
+        </div>
+      </div>
+
+      <!-- Información adicional -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="tipo_documento" class="form-label text-white">Tipo de documento</label>
+          <select class="form-select" id="tipo_documento" name="tipo_documento" required>
+            <option value="" selected disabled>Selecciona un tipo de documento</option>
+            <option value="DNI">DNI</option>
+            <option value="Pasaporte">Pasaporte</option>
+          </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="numero_documento" class="form-label text-white">Número de documento</label>
+          <input type="text" class="form-control" id="numero_documento" name="numero_documento" required>
+        </div>
+      </div>
+
+      <!-- Botón de envío -->
+      <div class="text-center">
+        <button type="submit" class="btn btn-light mt-3">Reservar cita</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+  // JavaScript para actualizar el campo 'doctor' automáticamente al seleccionar la especialidad
+  document.getElementById('especialidad').addEventListener('change', function () {
+    var especialidadId = this.value;
+    var doctorField = document.getElementById('doctor');
+
+    // Obtener el nombre del médico basado en la especialidad seleccionada
+    var selectedOption = this.selectedOptions[0];
+    var doctorName = selectedOption.getAttribute('data-doctor-name');
+
+    // Asignar el nombre del médico al campo de doctor
+    if (doctorName) {
+      doctorField.value = doctorName; // Asigna el nombre del médico
+    }
+  });
+</script>
+
+<script>
+  document.getElementById('especialidad').addEventListener('change', function () {
+    var especialidadId = this.value;
+    var doctorSelect = document.getElementById('doctor');
+
+    // Limpiar la lista de doctores
+    doctorSelect.innerHTML = '<option value="" selected disabled>Selecciona un doctor</option>';
+
+    if (especialidadId) {
+      fetch(`/api/doctores/${especialidadId}/`)
+        .then(response => response.json())
+        .then(data => {
+          data.doctores.forEach(function(doctor) {
+            var option = document.createElement('option');
+            option.value = doctor.id;
+            option.textContent = doctor.nombre;
+            doctorSelect.appendChild(option);
+          });
+        })
+        .catch(error => console.error('Error al cargar doctores:', error));
+    }
+  });
+</script>
+
+{% endblock script%}

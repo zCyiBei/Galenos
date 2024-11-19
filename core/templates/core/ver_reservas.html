@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-start vh-100" style="margin-top: 50px;">
+  <div class="card p-4 shadow-lg" style="background-color: rgba(128, 128, 128, 0.7); border-radius: 15px; width: 80%;">
+    <h2 class="text-center text-white mb-4">Citas Reservadas</h2>
+
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Usuario</th>
+          <th>Médico</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Tipo Documento</th>
+          <th>Número Documento</th>
+          <th>Estado Reserva</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in citas %}
+          <tr>
+            <td>{{ cita.usuario }}</td>
+            <td>{{ cita.medico }}</td>
+            <td>{{ cita.fecha }}</td>
+            <td>{{ cita.hora }}</td>
+            <td>{{ cita.tipo_documento }}</td>
+            <td>{{ cita.numero_documento }}</td>
+            <td>{{ cita.estado }}</td>
+            <td>
+                <form method="POST" action="{% url 'anular_cita' cita.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button 
+                        type="submit" 
+                        class="btn btn-danger btn-sm"
+                        onclick="return confirm('¿Estás seguro de que deseas anular esta cita?');">
+                        Anular
+                    </button>
+                </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="8" class="text-center">No hay citas reservadas</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="text-center">
+      <a href="{% url 'reservar_cita' %}" class="btn btn-light mt-3">Ir a reservar</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'core/css/nosotros.css' %}">
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const botonesEliminar = document.querySelectorAll('.eliminar-cita');
+
+        botonesEliminar.forEach(boton => {
+            boton.addEventListener('click', function () {
+                const citaId = this.getAttribute('data-cita-id');
+                const confirmacion = confirm('¿Estás seguro de que deseas anular esta cita?');
+
+                if (confirmacion) {
+                    fetch(`/anular-cita-ajax/${citaId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            alert(data.message);
+                            window.location.reload();  // Recargar la página
+                        } else if (data.error) {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+            });
+        });
+    });
+</script>
+{% endblock script %}
+ 

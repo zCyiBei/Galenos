@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+  <div class="jumbotron text-center py-5 mb-5">
+    <h2 class="display-4" style="color: white;">Acerca de Nosotros</h2>
+    <p class="lead">Somos un centro médico comprometido con el cuidado de la salud y el bienestar de las personas.</p>
+  </div>
+  
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <h2>Nuestra Historia</h2>
+      <p>El Centro Médico Galenos fue fundado con el firme propósito de brindar atención médica de calidad y calidez a nuestra comunidad. Desde nuestros inicios, hemos trabajado con dedicación para convertirnos en una institución de referencia en el cuidado de la salud.</p>
+      <p>Con cada paso que damos, seguimos innovando y ampliando nuestros servicios para estar siempre al servicio de nuestros pacientes.</p>
+    </div>
+    <div class="col-md-6">
+      <img src="{% static 'core/img/nfs4.jpg' %}" class="img-fluid rounded" alt="Nuestra Historia">
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <img src="{% static 'core/img/nfs3.jpg' %}" class="img-fluid rounded" alt="Nuestro Equipo">
+    </div>
+    <div class="col-md-6">
+      <h2>Nuestro Equipo</h2>
+      <p>Contamos con un equipo multidisciplinario de profesionales de la salud, altamente capacitados y comprometidos con brindar un servicio humanizado y de excelencia a nuestros pacientes.</p>
+      <p>En Galenos valoramos la colaboración, la empatía y la dedicación, porque entendemos que juntos hacemos la diferencia en la vida de quienes confían en nosotros.</p>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <h2>Nuestros Valores</h2>
+      <p>En Galenos, nuestros valores son el pilar de todo lo que hacemos: empatía, profesionalismo, ética y compromiso con la salud. Nos esforzamos por garantizar la mejor experiencia para nuestros pacientes en cada consulta, tratamiento o procedimiento.</p>
+      <p>Creemos que la confianza y el respeto son esenciales para construir relaciones sólidas con nuestros pacientes y sus familias.</p>
+    </div>
+    <div class="col-md-6">
+      <img src="{% static 'core/img/nfs2.jpg' %}" class="img-fluid rounded" alt="Nuestros Valores">
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+    <button onclick="redirectToIndex()" class="btn btn-secondary mb-3">Regresar a Inicio</button>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+  function redirectToIndex() {
+    window.location.href = "{% url 'inicio' %}";
+  }
+</script>
+<link rel="stylesheet" href="{% static 'core/css/nosotros.css' %}">
+{% endblock script %}

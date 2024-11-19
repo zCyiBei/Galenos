@@ -1,0 +1,22 @@
+.titulo-mantenedor {
+  color: black;
+}
+
+.card .card-title {
+  color: black;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-image: url('/static/core/img/aaa.jpg');
+}
+
+.card {
+  max-width: 1200px;
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(200, 200, 200, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+

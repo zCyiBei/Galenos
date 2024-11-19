@@ -1,0 +1,22 @@
+h1 {
+  font-size: x-large;
+  color: black !important;
+  font-weight: bolder;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+th {
+  vertical-align: top;
+  background-color: lightgray !important;
+}
+
+input, textarea, select {
+  border-color: darkgray !important;
+}
+
+body {
+  position: relative;
+  padding-bottom: 100px;
+}
+
